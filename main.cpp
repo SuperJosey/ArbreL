@@ -14,22 +14,29 @@ using namespace std;
 int main(int argc, const char * argv[])
 {
     
-    /*string test = "essai";
+    //Test manuel:
+    /*
+    string test = "test";
+    string test2 = "tete";
     
-    for(int i=0; i<test.size(); i++)
-    {
-        cout << "caractere num" << i << ":" << test.at(i) << endl;
-        cout << "\n";
-    }*/
-    
-    
-    string test = "essai";
     arbre monArbre;
     noeud *noeudAffichage = monArbre.getRacine();
     
-    monArbre.remplirArbre(test);
+
+    monArbre.remplirA(test);
+    monArbre.remplirA(test2);
     
     monArbre.parcourLargeur(noeudAffichage);
+    */
+    arbre monArbre;
+    
+    cout<<"Debut de l'importation du dictionaire dans l'arbre lexicographique:"<<endl;
+    
+    monArbre.importerDico();
+    
+    cout<<"Le chargement s'effectue en:"<<monArbre.getTempD()<<" secondes"<<endl;
+    
+    
     
     return 0;
 }

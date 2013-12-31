@@ -10,6 +10,7 @@
 #define __lexico__apc__
 
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -27,18 +28,23 @@ class arbre {
     
 private:
     noeud *root;
-
+    double tempChargementDico;
     
 public:
     arbre();
     ~arbre();
-    noeud *creerNoeud(char leCar);
-    void remplirArbre(string leMot);
-    void afficherRacine(noeud *a); //Methode d'affichage de la racine
-    void parcourLargeur(noeud *a);
+    noeud *creerNoeud(char leCar); //Methode de creation de noeud global
+    void afficherRacine(noeud *a);
+    void parcourLargeur(noeud *a); 
     void afficherNoeud(noeud *a);
-    noeud *parseur(string leMot); //Transforme une chaine en plusieur noeud
-    noeud *getRacine(); //Acesseur sur racine 
+    noeud *getRacine();      //Accesseur sur racine
+    double getTempD();       //Accesseur sur tempChargementDico
+    void setTempD(double x); //Mutateur sur tempChargementDico
+    void remplirA(string leMot); //Remplis l'arbre en fonction de la chaine fournis
+    bool recherche(char car, noeud *niveau); //Renvoie true si matching
+    noeud *rechercheN(char car, noeud *niveau); //Renvois le noeud si matching
+    void importerDico(); 
+    
 };
 
 

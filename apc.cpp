@@ -8,17 +8,19 @@
 
 #include "apc.h"
 #include <queue>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
 arbre::arbre(){
     
     root = creerNoeud('!');
-
+    tempChargementDico=0;
 }
 
 arbre::~arbre(){
-    //detruire si dynamique
+    
 }
 
 noeud *arbre::creerNoeud(char leCar){
@@ -32,16 +34,90 @@ noeud *arbre::creerNoeud(char leCar){
     return tmp;
 }
 
-void arbre::remplirArbre(string leMot){
-    
-    if(root->fg == NULL){
+
+void arbre::remplirA(string leMot){
+
+    noeud *current = root;
+    for (int i=0; i<leMot.size(); i++)
+    {
+
+        if(current->fg == NULL)
+        {
+            current->fg=creerNoeud(leMot[i]);
+            current=current->fg;
+        }
+        else
+        {
+
+            if(rechercheN(leMot[i], current) != NULL)
+            {         
+                noeud *tmp = rechercheN(leMot[i], current);
+                current = tmp;
+                
+            }
+            else{
+                current->fd=creerNoeud(leMot[i]);
+                current=current->fd;
         
-        root->fg = parseur(leMot);//On insere le premier noeud (1er carac du mot)
+            }
+            
+        }
+        
     }
-    //Sinon on parcour l'arbre pour verifier si le noeud n'existe pas au meme niveau (largeur)
-        //si le caractere nexiste pas on creer un nouveau noeud (avec edition des lien fg fd)
-        //sinon on passe au caractere suivant et on descend de un niveau pour parcourir l'arbe en largeur
+    if(current->fg == NULL)
+        current->fg = creerNoeud('\0');
+    else
+    {
+        noeud *tmp = creerNoeud('\0');
+        tmp->fd = current->fg;
+        current->fg = tmp;
+    }
+
+    
 }
+
+
+bool arbre::recherche(char car, noeud *niveau){
+    
+    noeud *current= niveau->fg;
+    
+    while (current->fd != NULL)
+    {
+        if(current->caractere == car)
+        {
+            return true;
+        }
+        
+        current = current->fd;
+    }
+    
+    return false;
+    
+
+    
+}
+
+noeud *arbre::rechercheN(char car, noeud *niveau){
+    
+    noeud* tmp = niveau->fg;
+    if( tmp->fg != NULL )
+    {
+        if( tmp->caractere == car )
+            return tmp;
+        else
+        {
+
+            while(tmp->fd != NULL)
+            {
+                if(tmp->fd->caractere == car )
+                    return tmp->fd;
+                tmp = tmp->fd;
+            }
+        }
+    }
+    return NULL;
+}
+
 
 void arbre::parcourLargeur(noeud *a){
     
@@ -66,17 +142,7 @@ void arbre::parcourLargeur(noeud *a){
     }
 }
 
-noeud *arbre::parseur(string leMot){
-    
-    noeud *tmp = new noeud;
-    
-    for(int i=0; i<leMot.size(); i++)
-    {
-        return tmp=creerNoeud(leMot.at(i));
-    }
-    
-    return NULL;
-}
+
 
 noeud *arbre::getRacine(){
     
@@ -103,3 +169,37 @@ void arbre::afficherRacine(noeud *a){
     delete tmp;
 }
 
+void arbre::importerDico(){
+    
+    clock_t debut=clock();
+    
+    ifstream dico("Gros.txt", ios::in); //ouverture du fichier en lecture
+    string ligne;
+    
+    if(dico){
+        
+        while(getline(dico,ligne))
+        {
+            remplirA(ligne);
+        }
+        
+        dico.close();
+    }
+    else{
+        cerr<<"Impossible d'ouvrir le fichier"<<endl;
+    }
+    
+    clock_t fin=clock();
+    double temp=(double)(debut-fin)/CLOCKS_PER_SEC * 1000.0;
+    setTempD(temp);
+}
+
+void arbre::setTempD(double x)
+{
+    tempChargementDico = x;
+}
+
+double arbre::getTempD()
+{
+    return tempChargementDico;
+}
